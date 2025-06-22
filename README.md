@@ -13,7 +13,7 @@ A JSON structure is the main JSON structure and represents the top of the JSON t
 int json_add_array (json_t *json, char *name, json_array_t *array);
 ```
 
-`json_add_array()` adds a named Array to the top level of a JSON tree.
+    Adds a named Array to the top level of a JSON tree.
 
 ```c
 int json_add_object (json_t *json, char *name, json_object_t *object);
