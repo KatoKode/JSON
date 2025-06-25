@@ -25,7 +25,7 @@ int json_add_object (json_t *json, char *name, json_object_t *object);
 int json_add_value (json_t *json, char  *name, json_value_t *value);
 ```
 
-`json_add_value()` adds a named Value to the top level of a JSON Tree.  Returns 0 for success or -1 for failure.
+`json_add_value()` adds a named JSON Value to the top level of a JSON Tree.  Returns 0 for success or -1 for failure.
 
 ```c
 void * json_alloc();
