@@ -1,0 +1,312 @@
+#include "main.h"
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// MAIN
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int main (int argc, char *argv[]) {
+
+  json_test();
+
+  return 0;
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_TEST
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void json_test (void)
+{
+  puts("Build JSON Tree\n");
+
+  // Allocate a JSON Structure on the Heap
+  json_t *json;
+  if ((json = json_alloc()) == NULL) return;
+
+  // Initialize a JSON Structure
+  if (json_init(json) < 0) { json_free(json); }
+
+  // Add a named Double Value to a JSON Structure (at uppermost level)
+  json_value_t *json_value = json_alloc();
+  json_value_set_double(json_value, DBL_MAX);
+
+  char name [JSON_NAME_LEN + 1] = "DOUBLE_01";
+  if (json_add_value(json, name, json_value) < 0) return;
+
+  // Add a named Long Value to a JSON Structure (at uppermost level)
+  json_value = json_value_alloc();
+  json_value_set_long(json_value, LONG_MAX);
+
+  (void) strncpy(name, "LONG_01", JSON_NAME_LEN);
+  if (json_add_value(json, name, json_value) < 0) return;
+
+  // Add a named JSON Object to a JSON Structure (at uppermost level)
+  json_object_t *json_object = json_object_alloc();
+  json_object_init(json_object);
+
+  (void) strncpy(name, "OBJECT_01", JSON_NAME_LEN);
+  if (json_add_object(json, name, json_object) < 0) return;
+
+  // Add a named String Value to JSON Object "OBJECT_01"
+  json_value = json_alloc();
+  json_value_set_string(json_value, "THIS IS A STRING");
+
+  (void) strncpy(name, "STRING_01", JSON_NAME_LEN);
+  if (json_object_add_value(json_object, name, json_value) < 0) return;
+
+  // Add a named Long Value to JSON Object "OBJECT_01"
+  json_value = json_alloc();
+  json_value_set_long(json_value, -32768);
+
+  (void) strncpy(name, "LONG_02", JSON_NAME_LEN);
+  if (json_object_add_value(json_object, name, json_value) < 0) return;
+
+  // Add a named Boolean Value to JSON Object "OBJECT_01"
+  json_value = json_alloc();
+  json_value_set_boolean(json_value, json_true);
+
+  (void) strncpy(name, "BOOL_01", JSON_NAME_LEN);
+  if (json_object_add_value(json_object, name, json_value) < 0) return;
+
+  // Add a named JSON Array to a JSON Structure (at uppermost level)
+  json_array_t *json_array = json_array_alloc();
+  json_array_init(json_array);
+
+  (void) strncpy(name, "ARRAY_01", JSON_NAME_LEN);
+  if (json_add_array(json, name, json_array) < 0) return;
+
+  // Add a Long Value to JSON Array "ARRAY_01"
+  json_value = json_alloc();
+  json_value_set_long(json_value, 65536);
+
+  if (json_array_add_value(json_array, json_value) < 0) return;
+
+  // Add a String Value to JSON Array "ARRAY_01"
+  json_value = json_alloc();
+  json_value_set_string(json_value, "THIS TOO IS A STRING");
+
+  if (json_array_add_value(json_array, json_value) < 0) return;
+
+  // Add a Boolean Value to JSON Array "ARRAY_01"
+  json_value = json_alloc();
+  json_value_set_boolean(json_value, json_false);
+
+  if (json_array_add_value(json_array, json_value) < 0) return;
+
+  // Add a Double Value to JSON Array "ARRAY_01"
+  json_value = json_alloc();
+  json_value_set_double(json_value, 0.00654);
+
+  if (json_array_add_value(json_array, json_value) < 0) return;
+
+  // Add a JSON Array to JSON Array "ARRAY_01"
+  json_array_t *json_array_2 = json_array_alloc();
+  json_array_init(json_array_2);
+
+  if (json_array_add_array(json_array, json_array_2) < 0) return;
+
+  // Add a String Value to a JSON Array
+  json_value = json_alloc();
+  json_value_set_string(json_value, "ONE");
+
+  if (json_array_add_value(json_array_2, json_value) < 0) return;
+
+  // Add a String Value to a JSON Array
+  json_value = json_alloc();
+  json_value_set_string(json_value, "TWO");
+
+  if (json_array_add_value(json_array_2, json_value) < 0) return;
+
+  // Add a String Value to a JSON Array
+  json_value = json_alloc();
+  json_value_set_string(json_value, "THREE");
+
+  if (json_array_add_value(json_array_2, json_value) < 0) return;
+
+  // Add a named String Value to the JSON Object "OBJECT_01"
+  json_value = json_alloc();
+  json_value_set_string(json_value, "THIS IS ALSO A STRING");
+
+  (void) strncpy(name, "STRING_02", JSON_NAME_LEN);
+  if (json_object_add_value(json_object, name, json_value) < 0) return;
+
+  // Add a named Double Value to the JSON Object "OBJECT_01"
+  json_value = json_alloc();
+  json_value_set_double(json_value, 0.0005432);
+
+  (void) strncpy(name, "DOUBLE_02", JSON_NAME_LEN);
+  if (json_object_add_value(json_object, name, json_value) < 0) return;
+
+  // Add a named JSON Object to JSON Object "OBJECT_01"
+  json_object_t *json_object_2 = json_object_alloc();
+  json_object_init(json_object_2);
+
+  (void) strncpy(name, "OBJECT_02", JSON_NAME_LEN);
+  if (json_object_add_object(json_object, name, json_object_2) < 0) return;
+
+  // Add a named String Value to the JSON Object "OBJECT_02"
+  json_value = json_alloc();
+  json_value_set_string(json_value, "YET ANOTHER STRING");
+
+  (void) strncpy(name, "STRING_03", JSON_NAME_LEN);
+  if (json_object_add_value(json_object_2, name, json_value) < 0) return;
+
+  // Add a named Long Value to the JSON Object "OBJECT_02"
+  json_value = json_alloc();
+  json_value_set_long(json_value, 131072);
+
+  (void) strncpy(name, "LONG_03", JSON_NAME_LEN);
+  if (json_add_value(json, name, json_value) < 0) return;
+
+  // Allocate a JSON Writer
+  char const path[] = "./json_test_1.json";
+  json_writer_t *json_writer;
+  if ((json_writer = json_writer_alloc()) == NULL) return;
+
+  // Initialize a JSON Writer
+  if (json_writer_init(json_writer, json, path) < 0) return;
+
+  // Write a JSON Tree to a JSON File
+  if (json_writer_do(json_writer) < 0) return;
+
+  // Terminate a JSON Writer
+  json_writer_term(json_writer);
+  // Free a JSON Writer
+  json_writer_free(json_writer);
+
+  // Terminate a JSON Structure
+  json_term(json);
+  // Free a JSON Structure
+  json_free(json);
+
+  puts("Pause\n");
+
+  // Take a break
+  struct timespec req = { 0, 500000000 };
+  (void) nanosleep(&req, NULL);
+
+  puts("Search JSON Tree and Output Results");
+
+  // Initialize a JSON Scanner
+  json_scanner_t json_scanner;
+  if (json_scanner_init(&json_scanner, path) < 0) return;
+
+  // Scan a JSON File into JSON Tokens
+  if (json_scanner_do(&json_scanner) < 0) return;
+
+  // Initialize a JSON Parser
+  json_parser_t json_parser;
+  if (json_parser_init(&json_parser, &json_scanner) < 0) return;
+
+  // Parse JSON Tokens into a JSON Structure
+  if (json_parser_do(&json_parser) < 0) return;
+
+  json = json_parser.json;
+
+  // Terminate a JSON Parser
+  json_parser_term(&json_parser);
+
+  // Terminate a JSON Scanner
+  json_scanner_term(&json_scanner);
+
+  // Retrieve a named JSON Object from a JSON Structure
+  json_member_t *member;
+  if ((member = json_search(json, "OBJECT_01")) == NULL) return;
+
+  if (json_member_type(member) != JSON_OBJECT) return;
+
+  json_object_t *object = member;
+
+  // Retreive a Long Value from JSON Object "OBJECT_01"
+  if ((member = json_object_search(object, "LONG_02")) == NULL) return;
+
+  if (json_member_type(member) != JSON_LONG) return;
+
+  json_value_t *value = member;
+  printf("\nLONG_02: %ld\n\n", json_value_get_long(value));
+
+  // Retrieve a named JSON Array from a JSON Structure
+  if ((member = json_search(json, "ARRAY_01")) == NULL) return;
+
+  if (json_member_type(member) != JSON_ARRAY) return;
+
+  json_array = member;
+
+  // Print the members of JSON Array "ARRAY_01"
+  printf("ARRAY_01: ");
+  print_json_array(json_array);
+  putchar('\n');
+  putchar('\n');
+
+  // Allocate a JSON Writer
+  char const path2[] = "./json_test_2.json";
+  json_writer = json_writer_alloc();
+
+  // Initialize a JSON Writer
+  if (json_writer_init(json_writer, json, path2) < 0) return;
+
+  // Write a JSON Tree to a JSON File
+  if (json_writer_do(json_writer) < 0) return;
+
+  // Terminate a JSON Writer
+  json_writer_term(json_writer);
+  // Free a JSON Writer
+  json_writer_free(json_writer);
+
+  // Terminate a JSON Structure
+  json_term(json);
+  // Free a JSON Structure
+  json_free(json);
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// print_json_array
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void print_json_array (json_array_t *json_array)
+{
+  int do_comma = 0;
+
+  putchar('[');
+
+  for (json_member_t *member = json_array_begin(json_array);
+      member != NULL;
+      member = json_array_next(json_array))
+  {
+    if (do_comma) putchar(',');
+    else do_comma = 1;
+
+    switch (json_member_type(member))
+    {
+      case JSON_BOOLEAN:
+        {
+          json_value_t *value = member;
+          printf("%s", json_value_get_boolean(value));
+        }
+        break;
+      case JSON_DOUBLE:
+        {
+          json_value_t *value = member;
+          printf("%g", json_value_get_double(value));
+        }
+        break;
+      case JSON_LONG:
+        {
+          json_value_t *value = member;
+          printf("%ld", json_value_get_long(value));
+        }
+        break;
+      case JSON_STRING:
+        {
+          json_value_t *value = member;
+          printf("\"%s\"", json_value_get_string(value));
+        }
+        break;
+      case JSON_ARRAY:
+        {
+          json_array_t *json_array_2 = member;
+          print_json_array(json_array_2);
+        }
+        break;
+      case JSON_OBJECT:
+        puts("OBJECT\n");
+        break;
+      default:;
+    }
+  }
+  putchar(']');
+}
