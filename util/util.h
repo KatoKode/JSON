@@ -6,28 +6,13 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
-#include <stdio.h>
 
 //------------------------------------------------------------------------------
-#define minimum(X, Y) ((X < Y) ? X : Y)
-#define maximum(X, Y) ((X > Y) ? X : Y)
-#define addr_of(P) ((void *)&P)
-#define deref(P) (*((void **)P))
-//------------------------------------------------------------------------------
-// FUNCTION: MMOVE
-// memory move using quadword (64-bits)
-// 2023-11-24
-// J. McIntosh
-//
-// WARNING: THIS ROUTINE DOES NOT HANDLE THE OVERLAPPING SOURCE-DESTINATION
-//          SENARIO.
-//
+
 void * memmove64 (void *, void const *, size_t);
+
 //------------------------------------------------------------------------------
-// STRUCTURE: LIST
-// 2023-12-31
-// J. McIntosh
-//
+
 typedef struct list list_t;
 
 struct list {
@@ -84,10 +69,7 @@ void * list_succ (list_t *);
 void list_term (list_t *);
 
 //------------------------------------------------------------------------------
-// STRUCTURE: LIFO
-// 2025-02-22
-// J. McIntosh
-//
+
 typedef struct lifo lifo_t;
 
 struct lifo {
@@ -108,76 +90,7 @@ void lifo_term (lifo_t *);
 void * lifo_top (lifo_t *);
 
 //------------------------------------------------------------------------------
-// STRUCTURE: QUEUE
-// 2024-03-11
-// J. McIntosh
-//
-typedef struct queue queue_t;
 
-struct queue {
-  size_t      o_size;
-  size_t      s_size;
-  void *      head;
-  void *      tail;
-  void *      bufend;
-  void *      buffer;
-};
-
-#define queue_alloc() (calloc(1, sizeof(queue_t)))
-#define queue_free(P) (free(P), P = NULL)
-
-int queue_empty (queue_t *);
-int queue_full (queue_t *);
-void * queue_init (queue_t *, size_t const, size_t const);
-int queue_deque (queue_t *, void *);
-int queue_enque (queue_t *, void const *);
-void queue_term (queue_t *);
-//------------------------------------------------------------------------------
-// STRUCTURE: STACK
-// 2024-10-17
-// J. McIntosh
-//
-typedef struct stack t_stack;
-
-struct stack {
-  size_t      o_size;
-  size_t      s_size;
-  void *      head;
-  void *      end;
-  void *      buffer;
-};
-
-#define stack_alloc() (calloc(1, sizeof(t_stack)))
-#define stack_free(P) (free(P), P = NULL)
-
-int stack_empty (t_stack *);
-int stack_full (t_stack *);
-void * stack_init (t_stack *, size_t const, size_t const);
-int stack_pop (t_stack *, void *);
-int stack_push (t_stack *, void const *);
-void stack_term (t_stack *);
-//------------------------------------------------------------------------------
-// FUNCTION: SUBSTRING
-// 2024-01-20
-// J. McIntosh
-//
 char * substring (char const *, size_t, size_t);
-//------------------------------------------------------------------------------
-// FUNCTION: STRUPPER
-// 2024-01-20
-// J. McIntosh
-//
-char * strupper (char *);
-//------------------------------------------------------------------------------
-// FUNCTION: GET_ERRNO
-// 2024-02-25
-// J. McIntosh
-//
-int get_errno (void);
-//------------------------------------------------------------------------------
-// FUNCTION: CLR_ERRNO
-// 2024-02-25
-// J. McIntosh
-//
-void clr_errno (void);
+
 #endif
