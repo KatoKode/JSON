@@ -9,11 +9,15 @@ by Jerry McIntosh
 ## JSON Structure
 A JSON structure is the main structure and represents the top of the JSON Tree.  A JSON structure can hold Objects, Arrays, and Values.
 
+---
+
 ```c
 int json_add_array (json_t *json, char *name, json_array_t *array);
 ```
 
 `json_add_array` adds a named Array to the top level of a JSON Tree.  Returns 0 for success or -1 for failure.
+
+---
 
 ```c
 int json_add_object (json_t *json, char *name, json_object_t *object);
