@@ -1,7 +1,6 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <errno.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
