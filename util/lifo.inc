@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------------------------
-;   Assembly Language Implementation of a B-Tree
+;   JSON Library Implementation in C with Assembly Language Support Libraries
 ;   Copyright (C) 2025  J. McIntosh
 ;
 ;   This program is free software; you can redistribute it and/or modify
