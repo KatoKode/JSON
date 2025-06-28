@@ -193,13 +193,13 @@ void json_test (void)
   // Free a JSON Structure
   json_free(json);
 
+  // Take a break, share CPU
   puts("Pause\n");
 
-  // Take a break
   struct timespec req = { 0, 500000000 };
   (void) nanosleep(&req, NULL);
 
-  puts("Search JSON Tree and Output Results");
+  puts("Search JSON Tree and Output Results\n");
 
   // Initialize a JSON Scanner
   json_scanner_t json_scanner;
@@ -208,12 +208,22 @@ void json_test (void)
   // Scan a JSON File into JSON Tokens
   if (json_scanner_do(&json_scanner) < 0) return;
 
+  // Take a break, share CPU
+  puts("Pause\n");
+
+  (void) nanosleep(&req, NULL);
+
   // Initialize a JSON Parser
   json_parser_t json_parser;
   if (json_parser_init(&json_parser, &json_scanner) < 0) return;
 
   // Parse JSON Tokens into a JSON Structure
   if (json_parser_do(&json_parser) < 0) return;
+
+  // Take a break, share CPU
+  puts("Pause\n");
+
+  (void) nanosleep(&req, NULL);
 
   json = json_parser.json;
 

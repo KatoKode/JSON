@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------------------
-#   Assembly Language Implementation of a B-Tree
+#   JSON Library Implementation in C with Assembly Language Support Libraries
 #   Copyright (C) 2025  J. McIntosh
 #
 #   This program is free software; you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 #   with this program; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
-# go_json_test.sh
+## go_json_test.sh
 #
 clear;
 
