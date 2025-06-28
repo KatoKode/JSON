@@ -90,56 +90,5 @@ substring:
       mov       rsp, rbp
       pop       rbp
       ret
-;-------------------------------------------------------------------------------
-; C/C++ definition:
-;
-;   char* strupper (char *src)
-; 
-; param:
-;
-;   rdi = src
-;
-; return:
-;
-;   rax = src | NULL
-;
-; stack:
-;
-;   [rbp - 8] = rdi (src)
-;
-; WARNING: this routine does not check for: src == null.
-;
-section .data
-;
-section .bss
-;
-section .text
-      global strupper:function
-strupper:
-; prologue
-      push      rbp
-      mov       rbp, rsp
-      sub       rsp, 8
-; stor rdi (src) on stack
-      mov       QWORD [rbp - 8], rdi
-; r15 = src
-      mov       r15, rdi
-; convert src to uppercase
-      xor       rdi, rdi
-.loop:
-      xor       al, al
-      cmp       al, BYTE [r15]
-      je        .epilogue
-      mov       dil, BYTE [r15]
-      call      toupper wrt ..plt
-      mov       BYTE [r15], al
-      inc       r15
-      loop      .loop
-.epilogue:
-      mov       rax, QWORD [rbp - 8]
-      mov       rsp, rbp
-      pop       rbp
-      ret
-;-------------------------------------------------------------------------------
 %endif
 
