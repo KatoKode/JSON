@@ -63,6 +63,13 @@ void json_test (void)
 
   // Add a named String Value to JSON Object "OBJECT_01"
   json_value = json_alloc();
+  json_value_set_string(json_value, "THIS STRING WILL BE DELETED");
+
+  (void) strncpy(name, "STRING_00", JSON_NAME_LEN);
+  if (json_object_add_value(json_object, name, json_value) < 0) return;
+
+  // Add a named String Value to JSON Object "OBJECT_01"
+  json_value = json_alloc();
   json_value_set_string(json_value, "THIS IS A STRING");
 
   (void) strncpy(name, "STRING_01", JSON_NAME_LEN);
@@ -119,6 +126,12 @@ void json_test (void)
 
   if (json_array_add_array(json_array, json_array_2) < 0) return;
 
+  // Add a String Value to JSON Array "ARRAY_01"
+  json_value = json_alloc();
+  json_value_set_string(json_value, "THIS STRING WILL ALSO BE DELETED");
+
+  if (json_array_add_value(json_array, json_value) < 0) return;
+
   // Add a String Value to a JSON Array
   json_value = json_alloc();
   json_value_set_string(json_value, "ONE");
@@ -171,6 +184,19 @@ void json_test (void)
 
   (void) strncpy(name, "LONG_03", JSON_NAME_LEN);
   if (json_add_value(json, name, json_value) < 0) return;
+
+  // Delete String "STRING_00" from JSON Object "OBJECT_01"
+  json_member_t *member;
+  if ((member = json_search(json, "OBJECT_01")) == NULL) return;
+
+  json_object = member;
+  if (json_object_delete_member(json_object, "STRING_00") < 0) return;
+
+  // Delete String from JSON ARRAY "ARRAY_01"
+  if ((member = json_search(json, "ARRAY_01")) == NULL) return;
+
+  json_array = member;
+  if (json_array_delete_member(json_array, 5) < 0) return;
 
   // Allocate a JSON Writer
   char const path[] = "./json_test_1.json";
@@ -234,7 +260,6 @@ void json_test (void)
   json_scanner_term(&json_scanner);
 
   // Retrieve a named JSON Object from a JSON Structure
-  json_member_t *member;
   if ((member = json_search(json, "OBJECT_01")) == NULL) return;
 
   if (json_member_type(member) != JSON_OBJECT) return;
