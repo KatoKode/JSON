@@ -17,16 +17,18 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ------------------------------------------------------------------------------*/
 #include "json.h"
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//------------------------------------------------------------------------------
 // DECLARATION
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void json_delete_cb (void const *);
-
 void json_member_free (json_member_t *);
 void json_member_term (json_member_t *);
 
+void json_node_delete_cb (void *);
+
 void json_node_init (json_node_t *, json_member_t *);
 void json_node_term (json_node_t *);
+
+void json_pair_delete_cb (void *);
 
 int json_traverse_array (json_member_t *, void *,
     int (*enter_cb) (char const *, json_member_t *, void *),
@@ -35,7 +37,7 @@ int json_traverse_array (json_member_t *, void *,
 int json_traverse_object (json_member_t *, void *,
     int (*enter_cb) (char const *, json_member_t *, void *),
     int (*exit_cb) (char const *, json_member_t *, void *));
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//------------------------------------------------------------------------------
 // JSON_ADD_ARRAY
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int json_add_array (json_t *json, char *name, json_array_t *array)
@@ -77,9 +79,42 @@ int json_add_object (json_t *json, char *name, json_object_t *object)
   return json_add_member(json, name, object);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_ADD_VALUE
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int json_add_value (json_t *json, char *name, json_value_t *value)
+{
+  return json_add_member(json, name, value);
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_DELETE_MEMBER
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int json_delete_member (json_t *json, char const *name)
+{
+  json_pair_t *pair;
+  for (pair = list_begin(&json->list);
+      pair != NULL;
+      pair = list_next(&json->list))
+  {
+    if (strncmp(pair->name, name, JSON_NAME_LEN) == 0) break;
+  }
+
+  if (pair == NULL) return -1;
+
+  list_remove(&json->list, pair, json_pair_delete_cb);
+
+  return 0;
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_INIT
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int json_init (json_t *json)
+{
+  return list_init(&json->list, sizeof(json_pair_t));
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_SEARCH
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void * json_search (json_t *json, char *name)
+json_member_t * json_search (json_t *json, char *name)
 {
   for (json_pair_t *pair = list_begin(&json->list);
       pair != NULL;
@@ -90,14 +125,21 @@ void * json_search (json_t *json, char *name)
 
   return NULL;
 }
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// JSON_ADD_VALUE
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int json_add_value (json_t *json, char *name, json_value_t *value)
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   JSON_TERM
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+void json_term (json_t *json)
 {
-  return json_add_member(json, name, value);
+  for (json_pair_t *pair = list_begin(&json->list);
+      pair != NULL;
+      pair = list_next(&json->list))
+  {
+    json_pair_term(pair);
+  }
+
+  list_term(&json->list);
 }
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//------------------------------------------------------------------------------
 // JSON_ARRAY_ADD_ARRAY
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int json_array_add_array (json_array_t *array, json_array_t *member)
@@ -138,6 +180,18 @@ json_member_t * json_array_begin(json_array_t *json_array)
   return json_node->member;
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_ARRAY_DELETE_MEMBER
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int json_array_delete_member (json_array_t *json_array, size_t index)
+{
+  json_node_t *node;
+  if ((node = list_at(&json_array->list, index)) == NULL) return -1;
+
+  list_remove(&json_array->list, node, json_node_delete_cb);
+
+  return 0;
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_ARRAY_GET_MEMBER
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 json_member_t * json_array_get_member (json_array_t *json_array, size_t index)
@@ -175,21 +229,6 @@ void json_array_term (json_array_t *array) {
   }
 
   list_term(&array->list);
-}
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// JSON_DELETE_CB
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void json_delete_cb (void const *p)
-{
-  json_node_t *node = (json_node_t *)p;
-  json_node_term(node);
-}
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// JSON_INIT
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int json_init (json_t *json)
-{
-  return list_init(&json->list, sizeof(json_pair_t));
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_MEMBER_FREE
@@ -235,6 +274,13 @@ void json_member_term (json_member_t *member)
 int json_member_type (json_member_t *member)
 {
   return *((json_type_t *)member);
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_NODE_DELETE_CB
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void json_node_delete_cb (void *vp)
+{
+  json_node_term((json_node_t *)vp);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_NODE_INIT
@@ -307,6 +353,25 @@ int json_object_add_value (json_object_t *object,
   return json_object_add_member(object, name, value);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_OBJECT_DELETE_MEMBER
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int json_object_delete_member (json_object_t *object, char const *name)
+{
+  json_pair_t *pair;
+  for (pair = list_begin(&object->list);
+      pair != NULL;
+      pair = list_next(&object->list))
+  {
+    if (strncmp(pair->name, name, JSON_NAME_LEN) == 0) break;
+  }
+
+  if (pair == NULL) return -1;
+
+  list_remove(&object->list, pair, json_pair_delete_cb);
+
+  return 0;
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_OBJECT_INIT
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int json_object_init (json_object_t *object)
@@ -343,6 +408,13 @@ void json_object_term (json_object_t *object)
   list_term(&object->list);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// JSON_PAIR_DELETE_CB
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void json_pair_delete_cb (void *vp)
+{
+  json_pair_term((json_pair_t *)vp);
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_PAIR_INIT
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void json_pair_init (json_pair_t *pair, char *name, json_member_t *member)
@@ -364,20 +436,6 @@ void json_pair_term (json_pair_t *pair)
   if (pair->name) free(pair->name);
   json_member_term(pair->member);
   json_member_free(pair->member);
-}
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-   JSON_TERM
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-void json_term (json_t *json)
-{
-  for (json_pair_t *pair = list_begin(&json->list);
-      pair != NULL;
-      pair = list_next(&json->list))
-  {
-    json_pair_term(pair);
-  }
-
-  list_term(&json->list);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_TRAVERSE
