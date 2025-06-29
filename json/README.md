@@ -44,6 +44,14 @@ void * json_alloc();
 ---
 
 ```c
+int json_delete_member (json_t *json, char const *name);
+```
+
+`json_delete_member` locates the member with name matching `name` and removes that member from the top most level of the JSON Tree.  If successful, returns 0, otherwise, returns -1.
+
+---
+
+```c
 void json_free(json_t *json);
 ```
 
@@ -121,6 +129,14 @@ json_member_t * json_array_begin (json_array_t *array);
 ---
 
 ```c
+int json_array_delete_member (json_array_t *json_array, size_t index);
+```
+
+`json_array_delete_member` removes member at `index` from a JSON Array.  If successful, returns 0, otherwise, returns -1.
+
+---
+
+```c
 void json_array_free (json_array_t *array);
 ```
 
@@ -194,6 +210,14 @@ void * json_object_alloc();
 ```
 
 `json_object_alloc()` allocate memory on the Heap for a JSON Object.
+
+---
+
+```c
+int json_object_delete_member (json_object_t *json_object, char const *name);
+```
+
+`json_object_delete_member` locates the member with name matching `name` and removes that member from a JSON Object.  If successful, returns 0, otherwise, returns -1.
 
 ---
 
