@@ -16,13 +16,9 @@
 ;   with this program; if not, write to the Free Software Foundation, Inc.,
 ;   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ;-------------------------------------------------------------------------------
-; file:   list.asm
-; date:   2024-01-01
-; author: J.McIntosh
-; brief:  object llst implementation
 %ifndef LIST_ASM
 %define LIST_ASM
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern bsearch
 extern bzero
 extern calloc
@@ -38,7 +34,7 @@ ALIGN_MASK_8  EQU     ~(ALIGN_SIZE - 1)
 ALIGN_SIZE    EQU     16
 ALIGN_MASK    EQU     ~(ALIGN_SIZE - 1)
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 %macro ALIGN_STACK_AND_CALL 2-4
       mov     %1, rsp               ; backup stack pointer (rsp)
@@ -53,13 +49,13 @@ ALIGN_MASK    EQU     ~(ALIGN_SIZE - 1)
 ;
 ; Example: Call C callback function with address in register (rcx)
 ;         ALIGH_STACK_AND_CALL r12, rcx
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 %include "list.inc"
 ;
 section .text
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   int list_add (list_t *list, void const *object);
@@ -77,7 +73,7 @@ section .text
 ;
 ;   [rbp - 8]   = rdi (list)
 ;   [rbp - 16]  = rsi (object)
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_add:function
 list_add:
@@ -118,7 +114,7 @@ list_add:
       pop       rbp
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_at (list_t *list, size_t const index);
@@ -131,7 +127,7 @@ list_add:
 ; return:
 ;
 ;   rax = address of object at index | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_at:function
 list_at:
@@ -147,7 +143,7 @@ list_at:
 .return:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_begin (list_t *list);
@@ -159,7 +155,7 @@ list_at:
 ; return:
 ;
 ;   rax = &list->buffer[ 0 ] | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_begin:function
 list_begin:
@@ -175,7 +171,7 @@ list_begin:
 .epilogue:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   size_t list_count (list_t *list);
@@ -187,7 +183,7 @@ list_begin:
 ; return:
 ;
 ;   number of objects in list
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 section .text
       global list_count:function
@@ -202,7 +198,7 @@ list_count:
 .return:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_curr (list_t *list);
@@ -214,7 +210,7 @@ list_count:
 ; return:
 ;
 ;   rax = list->iter | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_curr:function
 list_curr:
@@ -231,13 +227,13 @@ list_curr:
 .epilogue:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;
 ; int list_delete(list_t *list, void const *key,
 ;     int (*find_cb) (void const *, void const *),
-;     void (*delete_cb) (void const *));
+;     void (*delete_cb) (void *));
 ;
 ; param:
 ;
@@ -255,7 +251,7 @@ list_curr:
 ;   QWORD [rbp - 8]   = rdi (list)
 ;   QWORD [rbp - 16]  = rcx (delete_cb)
 ;   QWORD [rbp - 24]  = (void *target)
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 section .text
       global list_delete:function
@@ -264,6 +260,7 @@ list_delete:
       push      rbp
       mov       rbp, rsp
       sub       rsp, 24
+      push      r12
 ; QWORD [rbp - 8] = rdi (list)
       mov       QWORD [rbp - 8], rdi
 ; QWORD [rbp - 16] = rcx (delete_cb)
@@ -281,7 +278,7 @@ list_delete:
       test      rcx, rcx
       jz        .no_delete_cb
       mov       rdi, rax
-      call      rcx
+      ALIGN_STACK_AND_CALL r12, rcx
 .no_delete_cb:
 ; if (target == (list->blkend - list->s_size)) goto .skip_move;
       mov       rdi, QWORD [rbp - 8]
@@ -313,11 +310,12 @@ list_delete:
 ; return 0;
       xor       eax, eax
 .epilogue:
+      pop       r12
       mov       rsp, rbp
       pop       rbp
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_end (list_t *list);
@@ -330,7 +328,7 @@ list_delete:
 ;
 ;   rax = &list->buffer[ list->count ] | NULL
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       global list_end:function
 list_end:
 ; if (list->next <= list->buffer) return NULL;
@@ -346,7 +344,7 @@ list_end:
 .epilogue:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C declaration:
 ;
 ;   void * list_find (list_t const *list, void const *key,
@@ -361,7 +359,7 @@ list_end:
 ; return:
 ;
 ;   eax = iter (address of matching object) | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_find:function
 list_find:
@@ -375,7 +373,7 @@ list_find:
       call      bsearch wrt ..plt
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   int list_init (list_t *list, size_t const obj_size);
@@ -393,7 +391,7 @@ list_find:
 ;
 ;   QWORD [rbp - 8]   = rdi (list)
 ;   QWORD [rbp - 16]  = buffer_size
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_init:function
 list_init:
@@ -405,7 +403,7 @@ list_init:
       mov       QWORD [rbp - 8], rdi
 ; list->o_size = obj_size;
       mov       QWORD [rdi + list.o_size], rsi
-; list->s_size = (obj_size + ALIGN_SIZE - 1) & ALIGN_MASK;
+; list->s_size = (obj_size + ALIGN_SIZE_8 - 1) & ALIGN_MASK_8;
       mov       rax, rsi
       add       rax, QWORD ALIGN_SIZE_8
       dec       rax
@@ -444,7 +442,7 @@ list_init:
       pop       rbp
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_new (list_t *list);
@@ -463,7 +461,7 @@ list_init:
 ;   QWROD [rbp - 16]  = old_buffer_size
 ;   QWORD [rbp - 24]  = new_buffer_size
 ;   QWORD [rbp - 32]  = new_buffer
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_new:function hidden
 list_new:
@@ -519,7 +517,7 @@ list_new:
       pop       rbp
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_next (list_t *list);
@@ -531,7 +529,7 @@ list_new:
 ; return:
 ;
 ;   rax = list->iter | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_next:function
 list_next:
@@ -548,7 +546,7 @@ list_next:
 .return:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   size_t list_object_size (list_t *list);
@@ -560,14 +558,14 @@ list_next:
 ; return:
 ;
 ;   rax = list->o_size
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_object_size:function
 list_object_size:
       mov       rax, QWORD [rdi + list.o_size]
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_pred (list_t *list);
@@ -579,7 +577,7 @@ list_object_size:
 ; return:
 ;
 ;   rax = (list->iter - list->s_size) | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_pred:function
 list_pred:
@@ -596,7 +594,7 @@ list_pred:
       ret
 ;
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_prev (list_t *list);
@@ -608,7 +606,7 @@ list_pred:
 ; return:
 ;
 ;   rax = list->iter | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_prev:function
 list_prev:
@@ -625,7 +623,7 @@ list_prev:
 .return:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void list_remove (list_t *list, void const *target,
@@ -641,7 +639,8 @@ list_prev:
 ;
 ;   QWORD [rbp - 8]   = rdi (list)
 ;   QWORD [rbp - 16]  = rsi (target)
-;-------------------------------------------------------------------------------
+;   QWORD [rbp - 24 ] = rdx (delete_cb)
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_remove:function
 list_remove:
@@ -654,7 +653,23 @@ list_remove:
       mov       QWORD [rbp - 8], rdi
 ; QWORD [rbp - 16]  = rsi (target)
       mov       QWORD [rbp - 16], rsi
+; QWORD [rbp - 24]  = rdx (delete_cb)
+      mov       QWORD [rbp - 24], rdx
+; if (target < list->buffer || target > list->blkend) return;
+      cmp       rsi, QWORD [rdi + list.buffer]
+      jb        .epilogue
+      cmp       rsi, QWORD [rdi + list.blkend]
+      jae       .epilogue
+; if (((target - list->buffer) / list->s_size) != 0L) return;
+      xor       rdx, rdx
+      mov       rax, rsi
+      sub       rax, QWORD [rdi + list.buffer]
+      mov       rcx, QWORD [rdi + list.s_size]
+      div       rcx
+      test      rdx, rdx
+      jnz       .epilogue
 ; if (delect_cb != NULL) delete_cb(object);
+      mov       rdx, QWORD [rbp - 24]
       test      rdx, rdx
       jz        .no_delete_cb
       mov       rdi, rsi
@@ -688,13 +703,13 @@ list_remove:
       mov       rax, QWORD [rdi + list.blkend]
       sub       rax, QWORD [rdi + list.s_size]
       mov       QWORD [rdi + list.blkend], rax
-; epilogue:
+.epilogue:
       pop       r12
       mov       rsp, rbp
       pop       rbp
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   size_t list_slot_size (list_t *list);
@@ -706,13 +721,13 @@ list_remove:
 ; return:
 ;
 ;   rax = list->o_size
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_slot_size:function
 list_slot_size:
       mov       rax, QWORD [rdi + list.s_size]
       ret;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void list_sort (list_t *list, int (*sort_cb) (void const *, void const *));
@@ -721,7 +736,7 @@ list_slot_size:
 ;
 ;   rdi = list
 ;   rsi = sort_cb
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_sort:function
 list_sort:
@@ -733,7 +748,7 @@ list_sort:
       call      qsort wrt ..plt
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void * list_succ (list_t *list);
@@ -745,7 +760,7 @@ list_sort:
 ; return:
 ;
 ;   rax = (list->iter + list->s_size) | NULL
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_succ:function
 list_succ:
@@ -760,7 +775,7 @@ list_succ:
 .return:
       ret
 ;
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ; C definition:
 ;
 ;   void list_term (list_t *list)
@@ -772,7 +787,7 @@ list_succ:
 ; stack:
 ;
 ;   QWORD [rbp - 8] = rdi (list)
-;-------------------------------------------------------------------------------
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
       global list_term:function
 list_term:
