@@ -185,6 +185,10 @@ void json_test (void)
   (void) strncpy(name, "LONG_03", JSON_NAME_LEN);
   if (json_add_value(json, name, json_value) < 0) return;
 
+  puts("Build JSON Tree Successful\n");
+
+  puts("Delete String \"STRING_00\" from JSON Object \"OBJECT_01\"\n");
+
   // Delete String "STRING_00" from JSON Object "OBJECT_01"
   json_member_t *member;
   if ((member = json_search(json, "OBJECT_01")) == NULL) return;
@@ -192,11 +196,19 @@ void json_test (void)
   json_object = member;
   if (json_object_delete_member(json_object, "STRING_00") < 0) return;
 
+  puts("Delete String Successful\n");
+
+  puts("Delete String from JSON ARRAY \"ARRAY_01\"\n");
+
   // Delete String from JSON ARRAY "ARRAY_01"
   if ((member = json_search(json, "ARRAY_01")) == NULL) return;
 
   json_array = member;
   if (json_array_delete_member(json_array, 5) < 0) return;
+
+  puts("Delete String Successful\n");
+
+  puts("Write JSON Tree to File\n");
 
   // Allocate a JSON Writer
   char const path[] = "./json_test_1.json";
@@ -214,6 +226,8 @@ void json_test (void)
   // Free a JSON Writer
   json_writer_free(json_writer);
 
+  puts("Write JSON Tree Successful\n");
+
   // Terminate a JSON Structure
   json_term(json);
   // Free a JSON Structure
@@ -225,7 +239,7 @@ void json_test (void)
   struct timespec req = { 0, 500000000 };
   (void) nanosleep(&req, NULL);
 
-  puts("Search JSON Tree and Output Results\n");
+  puts("Scan JSON File into JSON Tokens\n");
 
   // Initialize a JSON Scanner
   json_scanner_t json_scanner;
@@ -234,10 +248,14 @@ void json_test (void)
   // Scan a JSON File into JSON Tokens
   if (json_scanner_do(&json_scanner) < 0) return;
 
+  puts("Scan JSON File Successful\n");
+
   // Take a break, share CPU
   puts("Pause\n");
 
   (void) nanosleep(&req, NULL);
+
+  puts("Parse JSON Tokens into JSON Tree\n");
 
   // Initialize a JSON Parser
   json_parser_t json_parser;
@@ -245,6 +263,8 @@ void json_test (void)
 
   // Parse JSON Tokens into a JSON Structure
   if (json_parser_do(&json_parser) < 0) return;
+
+  puts("Parse JSON Tokens Successful\n");
 
   // Take a break, share CPU
   puts("Pause\n");
@@ -259,33 +279,51 @@ void json_test (void)
   // Terminate a JSON Scanner
   json_scanner_term(&json_scanner);
 
+  puts("Search JSON Tree for JSON Object \"OBJECT_01\"\n");
+
   // Retrieve a named JSON Object from a JSON Structure
   if ((member = json_search(json, "OBJECT_01")) == NULL) return;
 
   if (json_member_type(member) != JSON_OBJECT) return;
 
+  puts("Search JSON Tree Successful\n");
+
   json_object_t *object = member;
+
+  puts("Search JSON Object \"OBJECT_01\" for Long Value \"LONG_02\"\n");
 
   // Retreive a Long Value from JSON Object "OBJECT_01"
   if ((member = json_object_search(object, "LONG_02")) == NULL) return;
 
   if (json_member_type(member) != JSON_LONG) return;
 
+  puts("Search JSON Object Successful\n");
+
+  puts("Output JSON Value \"LONG_02\"\n");
+
   json_value_t *value = member;
-  printf("\nLONG_02: %ld\n\n", json_value_get_long(value));
+  printf("  LONG_02: %ld\n\n", json_value_get_long(value));
+
+  puts("Search JSON Tree for JSON Array \"ARRAY_01\"\n");
 
   // Retrieve a named JSON Array from a JSON Structure
   if ((member = json_search(json, "ARRAY_01")) == NULL) return;
 
   if (json_member_type(member) != JSON_ARRAY) return;
 
+  puts("Search JSON Tree Successful\n");
+
   json_array = member;
 
+  puts("Output JSON Array \"ARRAY_01\"\n");
+
   // Print the members of JSON Array "ARRAY_01"
-  printf("ARRAY_01: ");
+  printf("  ARRAY_01: ");
   print_json_array(json_array);
   putchar('\n');
   putchar('\n');
+
+  puts("Write JSON Tree to File\n");
 
   // Allocate a JSON Writer
   char const path2[] = "./json_test_2.json";
@@ -296,6 +334,8 @@ void json_test (void)
 
   // Write a JSON Tree to a JSON File
   if (json_writer_do(json_writer) < 0) return;
+
+  puts("Write JSON Tree Successful\n");
 
   // Terminate a JSON Writer
   json_writer_term(json_writer);
