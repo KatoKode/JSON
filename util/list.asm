@@ -17,7 +17,7 @@
 ;   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ;-------------------------------------------------------------------------------
 %ifndef LIST_ASM
-%define LIST_ASM
+%define LIST_ASM 1
 ;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern bsearch
 extern bzero
@@ -25,6 +25,8 @@ extern calloc
 extern free
 extern qsort
 extern memmove64
+;
+;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 LIST_COUNT    EQU     16
 ;
