@@ -16,10 +16,10 @@
 #   with this program; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
-# json_test makefile
+#
 json_test: main.o ../util/libutil.so ../json/libjson.so
-	gcc -g main.o ../util/libutil.so ../json/libjson.so -o json_test
+	gcc -march=x86-64 -m64 -z noexecstack main.o ../util/libutil.so ../json/libjson.so -o json_test
 main.o: main.c
-	gcc -g -c main.c -o main.o
+	gcc -march=x86-64 -m64 -z noexecstack -Wall -c main.c -o main.o
 clean:
 	rm -f json_test main.o
