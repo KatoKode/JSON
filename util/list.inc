@@ -17,12 +17,7 @@
 ;   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ;-------------------------------------------------------------------------------
 %ifndef LIST_INC
-%define LIST_INC
-; file:   list.inc
-; date:   2024-01-01
-; author: J.McIntosh
-; brief:  object list implementation
-;-------------------------------------------------------------------------------
+%define LIST_INC 1
 ;
 struc list
     .o_size         resq      1     ; size (in bytes) of one object
