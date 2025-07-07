@@ -18,13 +18,8 @@
 ------------------------------------------------------------------------------*/
 #include "util.h"
 //------------------------------------------------------------------------------
-void __attribute__ ((constructor)) initLibrary(void) {
- //
- // Function that is called when the library is loaded.
- //
-}
-void __attribute__ ((destructor)) termLibrary(void) {
- //
- // Function that is called when the library is closed.
- //
-}
+// initUtilLibrary
+void __attribute__ ((constructor)) initUtilLibrary(void) { }
+//------------------------------------------------------------------------------
+// termUtilLibrary
+void __attribute__ ((destructor)) termUtilLibrary(void) { }
