@@ -16,13 +16,10 @@
 ;   with this program; if not, write to the Free Software Foundation, Inc.,
 ;   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ;-------------------------------------------------------------------------------
-; file:   string.asm
-; date:   2024-01-20
-; author: J. McIntosh
-; brief:  string operation routines
+;
 %ifndef STRING_ASM
-%define STRING_ASM
-;-------------------------------------------------------------------------------
+%define STRING_ASM 1
+;
 extern calloc
 extern strlen
 extern toupper
