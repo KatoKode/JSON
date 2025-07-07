@@ -16,12 +16,9 @@
 ;   with this program; if not, write to the Free Software Foundation, Inc.,
 ;   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ;-------------------------------------------------------------------------------
-; file:   memmove64.asm
-; date:   2023-11-24
-; author: J. McIntosh
-; brief:  quadword (64-bits) memory move routine
+;
 %ifndef MEMMOVE64_ASM
-%define MEMMOVE64_ASM
+%define MEMMOVE64_ASM 1
 ;
 QW_SIZE     EQU     8
 ;
