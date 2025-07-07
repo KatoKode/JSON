@@ -18,11 +18,6 @@
 ;-------------------------------------------------------------------------------
 %ifndef LIFO_ASM
 %define LIFO_ASM  1
-; file:   lifo.asm
-; data:   2025-02-22
-; author: J. McIntosh
-; brief:  last-in-first-out (lifo) lifo for 8-byte values
-;-------------------------------------------------------------------------------
 ;
 extern bzero
 extern calloc
