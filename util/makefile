@@ -18,10 +18,10 @@
 #-------------------------------------------------------------------------------
 # makefile for libutil.so
 libutil.so: memmove64.o list.o lifo.o string.o util.o
-	gcc -z noexecstack -shared memmove64.o list.o lifo.o string.o util.o \
+	gcc -march=x86-64 -m64 -z noexecstack -shared memmove64.o list.o lifo.o string.o util.o \
 		-o libutil.so
 util.o: util.c
-	gcc -fPIC -c util.c -o util.o
+	gcc -march=x86-64 -m64 -z noexecstack -fPIC -c util.c -o util.o
 string.o: string.asm
 	nasm -f elf64 string.asm
 lifo.o: lifo.asm
