@@ -31,19 +31,19 @@ extern memmove64
 LIST_COUNT    EQU     16
 ;
 ALIGN_SIZE_8  EQU     8
-ALIGN_MASK_8  EQU     ~(ALIGN_SIZE - 1)
+ALIGN_MASK_8  EQU     ~(ALIGN_SIZE_8 - 1)
 ;
-ALIGN_SIZE    EQU     16
-ALIGN_MASK    EQU     ~(ALIGN_SIZE - 1)
+ALIGN_SIZE_16 EQU     16
+ALIGN_MASK_16 EQU     ~(ALIGN_SIZE_16 - 1)
 ;
 ;- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ;
 %macro ALIGN_STACK_AND_CALL 2-4
-      mov     %1, rsp               ; backup stack pointer (rsp)
-      and     rsp, QWORD ALIGN_MASK ; align stack pointer (rsp) to
-                                    ; 16-byte boundary
-      call    %2 %3 %4              ; call C function
-      mov     rsp, %1               ; restore stack pointer (rsp)
+      mov     %1, rsp                   ; backup stack pointer (rsp)
+      and     rsp, QWORD ALIGN_MASK_16  ; align stack pointer (rsp) to
+                                        ; 16-byte boundary
+      call    %2 %3 %4                  ; call C function
+      mov     rsp, %1                   ; restore stack pointer (rsp)
 %endmacro
 ;
 ; Example: Call LIBC function
