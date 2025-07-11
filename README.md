@@ -16,4 +16,10 @@ sh ./json_make.sh
 
 Should all end well then go to the folder `json_test` to run the test script `go_json_test.sh`.
 
+---
+
+### FYI: In folder `JSON-main/json/` you will find a README.md file enumerating the JSON functionality.
+
+---
+
 Have Fun!
