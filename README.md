@@ -18,7 +18,7 @@ Should all end well then go to the folder `json_test` to run the test script `go
 
 ---
 
-**FYI:** In folder `JSON-main/json/` you will find a README.md file enumerating the JSON functionality.
+**FYI:** In folder `JSON-main/json/` you will find file `README.md` enumerating the JSON functionality.
 
 ---
 
