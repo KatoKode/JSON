@@ -176,7 +176,7 @@ void json_array_term (json_array_t *array);
 
 ---
 
-## JSON Object Structure
+## Object Structure
 A JSON Object can hold named JSON Objects, named JSON Arrays, and named JSON Values.  Each item in a JSON Object is a member of a key-value JSON Pair.  A key-value JSON Pair can hold one of the following: a JSON Object, a JSON Array, or a JSON Value.
 
 ---
