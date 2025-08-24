@@ -1,19 +1,21 @@
 /*------------------------------------------------------------------------------
-    JSON Library Implementation in C with Assembly Language Support Libraries
+    JSON (JSON) Library Implementation in C with Assembly Language Support
+    Libraries
+
     Copyright (C) 2025  J. McIntosh
 
-    This program is free software; you can redistribute it and/or modify
+    JSON is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
+    JSON is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
+    with JSON; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ------------------------------------------------------------------------------*/
 #include "main.h"
@@ -211,7 +213,7 @@ void json_test (void)
   puts("Write JSON Tree to File\n");
 
   // Allocate a JSON Writer
-  char const path[] = "./json_test_1.json";
+  char const path[] = "./demo_1.json";
   json_writer_t *json_writer;
   if ((json_writer = json_writer_alloc()) == NULL) return;
 
@@ -326,7 +328,7 @@ void json_test (void)
   puts("Write JSON Tree to File\n");
 
   // Allocate a JSON Writer
-  char const path2[] = "./json_test_2.json";
+  char const path2[] = "./demo_2.json";
   json_writer = json_writer_alloc();
 
   // Initialize a JSON Writer

@@ -18,12 +18,44 @@
 #   with JSON; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
-# makefile for demo
-demo: main.o ../util/libutil.so ../json/libjson.so
-	gcc -march=x86-64 -m64 -z noexecstack main.o ../util/libutil.so \
-		../json/libjson.so -o demo
-main.o: main.c
-	gcc -march=x86-64 -m64 -z noexecstack -Wall -c main.c -o main.o
-.PHONY: clean
-clean:
-	rm -f demo main.o
+# !/bin/sh
+#
+clear;
+
+sep=" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+
+echo -e "${sep}\n"
+
+if [ -e ./demo_1.json ];
+then
+  rm -f ./demo_1.json
+fi
+
+if [ -e ./demo_2.json ];
+then
+  rm -f ./demo_2.json
+fi
+
+./demo
+
+if [ -e ./demo_1.json ] && [ -e ./demo_2.json ];
+then
+  echo -e "Dump of file: demo_1.json\n"
+
+  cat ./demo_1.json
+
+  echo -e "\n\nDump of file: demo_2.json\n"
+
+  cat ./demo_2.json
+
+  echo -e "\n\nDiff of JSON files:\n"
+
+  diff -a -s ./demo_1.json ./demo_2.json
+
+  echo;
+
+echo -e "${sep}\n"
+
+else
+  echo -e "./demo FAILED!\n"
+fi
