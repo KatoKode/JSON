@@ -1,19 +1,21 @@
 #-------------------------------------------------------------------------------
-#   JSON Library Implementation in C with Assembly Language Support Libraries
+#   JSON (JSON) Library Implementation in C with Assembly Language Support
+#   Libraries
+#
 #   Copyright (C) 2025  J. McIntosh
 #
-#   This program is free software; you can redistribute it and/or modify
+#   JSON is free software; you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
 #   the Free Software Foundation; either version 2 of the License, or
 #   (at your option) any later version.
 #
-#   This program is distributed in the hope that it will be useful,
+#   JSON is distributed in the hope that it will be useful,
 #   but WITHOUT ANY WARRANTY; without even the implied warranty of
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #   GNU General Public License for more details.
 #
 #   You should have received a copy of the GNU General Public License along
-#   with this program; if not, write to the Free Software Foundation, Inc.,
+#   with JSON; if not, write to the Free Software Foundation, Inc.,
 #   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #-------------------------------------------------------------------------------
 # json_make.sh
@@ -40,13 +42,13 @@ test -e ./libjson.so || exit -1
 
 echo -e "${sep}"
 
-builtin cd ../json_test || exit -1
+builtin cd ../demo || exit -1
 
 make clean; make
 
-test -e ./json_test || exit -1
+test -e ./demo || exit -1
 
-chmod 744 ./go_json_test.sh || exit -1
+chmod 744 ./go_demo.sh || exit -1
 
 echo -e "${sep}"
 

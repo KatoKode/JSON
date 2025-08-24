@@ -14,12 +14,6 @@ This repository is written for a Linux OS.  FYI, the JSON Library was created on
 
 sh ./json_make.sh
 
-Should all end well then go to the folder `json_test` to run the test script `go_json_test.sh`.
-
----
-
-**FYI:** In folder `JSON-main/json/` you will find file `README.md` enumerating the JSON functionality.
-
----
+Should all end well then go to the folder `demo` to run the test script `go_demo.sh`.
 
 Have Fun!
