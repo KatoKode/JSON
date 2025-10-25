@@ -1,6 +1,4 @@
-Just Another Armchair Programmer
-
-JSON Library Implementation in C with Support Libraries in Assembly Language
+JSON Library Implementation in C
 
 by Jerry McIntosh
 
