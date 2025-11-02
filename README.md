@@ -17,6 +17,6 @@ Should all end well then go to the folder `demo` to run the test script `go_demo
 ---
 
 # LEAVE A STAR
-If you like the KatoKode BTree repository by all means leave a STAR to encourage others to visit.
+If you like the KatoKode JSON repository by all means leave a STAR to encourage others to visit.
 
 Thanks, and Have Fun!
