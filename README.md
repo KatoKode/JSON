@@ -14,4 +14,9 @@ sh ./json_make.sh
 
 Should all end well then go to the folder `demo` to run the test script `go_demo.sh`.
 
-Have Fun!
+---
+
+# LEAVE A STAR
+If you like the KatoKode BTree repository by all means leave a STAR to encourage others to visit.
+
+Thanks, and Have Fun!
