@@ -92,7 +92,7 @@ typedef struct json_list json_object_t;
 typedef struct json_node json_node_t;
 
 struct json_node {
-  void *        member;
+  json_member_t *     member;
 };
 
 #define json_node_alloc() (calloc(1, sizeof(json_node_t)))
@@ -102,8 +102,8 @@ struct json_node {
 typedef struct json_pair json_pair_t;
 
 struct json_pair {
-  char *        name;
-  void *        member;
+  char *            name;
+  json_member_t *   member;
 };
 
 #define json_pair_alloc() (calloc(1, sizeof(json_pair_t)))
