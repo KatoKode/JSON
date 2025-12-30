@@ -19,7 +19,7 @@ A lightweight, dependency-free JSON parsing and building library with core compo
 ### Quick Start
 
 
-# Build the shared library
+# Build the shared library and demo program
 ```bash
 sh ./json_make.sh
 ```
