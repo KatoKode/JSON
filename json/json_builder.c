@@ -297,6 +297,7 @@ void json_node_init (json_node_t *node, json_member_t *member)
 void json_node_term (json_node_t *node)
 {
   json_member_term(node->member);
+  json_member_free(node->member);
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // JSON_NODE_TYPE
