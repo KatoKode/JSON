@@ -3,6 +3,8 @@
 [![License: GPL-2.0](https://img.shields.io/badge/License-GPL%202.0-blue.svg)](https://opensource.org/licenses/GPL-2.0)
 [![Stars](https://img.shields.io/github/stars/KatoKode/JSON?style=social)](https://github.com/KatoKode/JSON/stargazers)
 
+by Jerry McIntosh
+
 A lightweight, dependency-free JSON parsing and building library with core components hand-optimized in x86_64 assembly language. Delivered as a shared library (`libjson.so`) with a clean C API.
 
 ### Highlights
@@ -22,17 +24,11 @@ A lightweight, dependency-free JSON parsing and building library with core compo
 sh ./json_make.sh
 ```
 
-# Run the demo (parses, builds, traverses, and cleans multiple JSON structures)
+# Run the demo (builds, saves, loads, parses, traverses, and frees multiple JSON structures)
 ```bash
 cd ./demo
 ./go_demo.sh
 ```
-
----
-
-This repository is written for a Linux OS.  FYI, the JSON Library was created on an OpenSuse Linux distro.  I do all my development on OpenSuse.
-
----
 
 ### API Reference
 
